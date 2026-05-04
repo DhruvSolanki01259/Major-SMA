@@ -1,37 +1,41 @@
-import express from "express";
-import cors from "cors";
-
-import "dotenv/config";
-
-// DB
+// Database Import
 import { connectDB } from "./database/connectDB.js";
 
-// Clerk Middleware
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
+// Routes
+import contentRoutes from "./routes/content.route.js";
+import authRoutes from "./routes/auth.route.js";
 
-const PORT = process.env.PORT || 8000;
+// Dependencies Import
+import cookieParser from "cookie-parser";
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
+
+// App Instance
 const app = express();
+const PORT = process.env.PORT || 8000;
 
 // Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-// Routes
-// Public route
+// Backend Running Test Port
 app.get("/", (req, res) => {
-  res.send("Public Route");
+  res.send(`Backend is running!!!`);
 });
 
-// Protected route
-app.get("/protected", ClerkExpressRequireAuth(), (req, res) => {
-  res.json({
-    message: "Protected data accessed",
-    userId: req.auth.userId,
-  });
-});
+// API's
+app.use("/api/auth", authRoutes);
+app.use("/api/content", contentRoutes);
 
-// Run App
+// App Run
 app.listen(PORT, () => {
-  console.log(`Server is Running on PORT: ${PORT}`);
-  // connectDB();
+  console.log(`Server is running on Port: ${PORT}`);
+  connectDB();
 });
