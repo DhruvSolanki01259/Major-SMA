@@ -17,6 +17,7 @@ import api from "../api/api.js";
 import { useAuthStore } from "../store/auth.store";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 /* ---------------- Animation ---------------- */
 
@@ -59,6 +60,18 @@ const Profile = () => {
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "twitter_connected") {
+      toast.success("Twitter account connected successfully!");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    if (params.get("error") === "twitter_failed") {
+      toast.error("Failed to connect Twitter account.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   if (!user) return <LoadingSpinner label="Loading profile..." />;
 
   /* ---------------- Logout ---------------- */
@@ -66,6 +79,14 @@ const Profile = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleConnect = (platform) => {
+    if (platform.toLowerCase() === "twitter") {
+      window.location.href = "http://localhost:8000/api/auth/connect/twitter";
+    } else {
+      toast.error(`${platform} integration coming soon!`);
+    }
   };
 
   /* ---------------- Social Providers ---------------- */
@@ -92,7 +113,7 @@ const Profile = () => {
     {
       name: "Twitter",
       icon: FaTwitter,
-      connected: user?.socialConnections?.twitter || false,
+      connected: !!user?.socialConnections?.twitter?.accessToken,
       color: "text-sky-500",
     },
   ];
@@ -104,7 +125,7 @@ const Profile = () => {
         <motion.div {...fadeUp()} className="flex justify-between items-end">
           <div>
             <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tighter">
-              Welcome back, {user.fullname.split(' ')[0]} 👋
+              Welcome back, {user.fullname?.split(' ')[0]} 👋
             </h1>
             <p className="mt-3 text-lg text-gray-500 font-medium">
               Manage your account settings and monitor your campaign statuses.
@@ -198,9 +219,10 @@ const Profile = () => {
                       </div>
 
                       <button
+                        onClick={() => !social.connected && handleConnect(social.name)}
                         className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
                           social.connected
-                            ? "bg-green-50 text-green-600"
+                            ? "bg-green-50 text-green-600 cursor-default"
                             : "bg-gray-900 text-white hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-900/20"
                         }`}
                       >

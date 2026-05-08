@@ -33,6 +33,26 @@ router.get(
   },
 );
 
+router.get(
+  "/connect/twitter",
+  protectRoute,
+  (req, res, next) => {
+    req.session.tempUserId = req.user._id;
+    passport.authenticate("twitter", { 
+      scope: ['users.read', 'tweet.read', 'tweet.write', 'offline.access'] 
+    })(req, res, next);
+  }
+);
+
+router.get(
+  "/twitter/callback",
+  passport.authenticate("twitter", { failureRedirect: "/profile?error=twitter_failed" }),
+  (req, res) => {
+    delete req.session.tempUserId;
+    res.redirect(`${process.env.FRONTEND_URL}/profile?success=twitter_connected`);
+  }
+);
+
 router.get("/me", protectRoute, getMe);
 
 router.post("/signup", signup);

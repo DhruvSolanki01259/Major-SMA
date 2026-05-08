@@ -43,6 +43,16 @@ const userSchema = new mongoose.Schema(
     profile_initials: {
       type: String,
     },
+
+    socialConnections: {
+      twitter: {
+        accessToken: String,
+        refreshToken: String,
+        profileId: String,
+        username: String,
+        connectedAt: Date,
+      },
+    },
   },
   {
     timestamps: true,

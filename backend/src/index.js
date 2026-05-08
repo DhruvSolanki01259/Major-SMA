@@ -12,6 +12,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import passport from "./config/passport.js";
+import session from "express-session";
 
 // App Instance
 const app = express();
@@ -26,7 +27,21 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  })
+);
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 // Backend Running Test Port
 app.get("/", (req, res) => {
