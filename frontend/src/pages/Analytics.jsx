@@ -16,7 +16,7 @@ import {
   FaLinkedin,
   FaFacebook,
 } from "react-icons/fa";
-import axios from "axios";
+import api from "../api/api.js";
 
 const API_URL =
   import.meta.env.VITE_BACKEND_API_URL || "http://localhost:8000";
@@ -93,7 +93,7 @@ const Analytics = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${API_URL}/api/posts`, {
+        const res = await api.get(`/posts`, {
           withCredentials: true,
         });
         // Backend returns { success: true, data: [...] }

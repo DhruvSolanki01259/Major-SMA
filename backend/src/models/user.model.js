@@ -21,17 +21,19 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: function() { return !this.googleId; },
       minlength: 6,
     },
 
-    // googleId: {
-    //   type: String,
-    // },
+    googleId: {
+      type: String,
+      default: null,
+    },
 
-    // avatar: {
-    //   type: String,
-    // },
+    avatar: {
+      type: String,
+      default: null,
+    },
 
     lastLogin: {
       type: Date,

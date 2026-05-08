@@ -7,7 +7,7 @@ import {
   Camera, Globe, Briefcase, Target, Lightbulb, Zap, Info, Clock
 } from "lucide-react";
 import ScheduleStep from "./ScheduleStep";
-import axios from "axios";
+import api from "../api/api.js";
 
 /* ---------- COLOR PALETTES ---------- */
 const colorPalettes = [
@@ -63,7 +63,7 @@ const CreatePost = ({ onPostSaved }) => {
     if (step === 0) {
       setIsLoading(true);
       try {
-        const res = await axios.post("http://localhost:8000/api/content/generate", { niche: postContent.niche });
+        const res = await api.post("/content/generate", { niche: postContent.niche });
         if (res.data && res.data.data) {
           setIdeas(res.data.data);
           setStep(1);
@@ -82,7 +82,7 @@ const CreatePost = ({ onPostSaved }) => {
       setIsLoading(true);
       const loadToast = toast.loading("AI is crafting your posts & initial images...");
       try {
-        const res = await axios.post("http://localhost:8000/api/content/generatePostContent", {
+        const res = await api.post("/content/generatePostContent", {
           niche: postContent.niche,
           selectedIdea: postContent.selectedIdea,
           platforms: selectedPlatforms,
@@ -122,7 +122,7 @@ const CreatePost = ({ onPostSaved }) => {
     const finalizeToast = toast.loading("Finalizing campaign and generating all platform assets...");
     try {
       const payload = { ...postContent, selectedPlatforms };
-      const res = await axios.post("http://localhost:8000/api/posts", payload);
+      const res = await api.post("/posts", payload);
       if (res.data.success) {
         toast.success("Campaign Launched Successfully!", { id: finalizeToast });
         if (onPostSaved) onPostSaved();

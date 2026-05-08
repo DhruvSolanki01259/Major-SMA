@@ -6,6 +6,7 @@ import { appendPostToSheet } from "../utils/googleSheets.js";
 export const createPost = async (req, res) => {
   try {
     const postData = req.body;
+    postData.user = req.user._id;
 
     // ── Image upload: every platform image MUST land on Cloudinary ──────────
     const isCloudinaryUrl = (url) =>
@@ -88,7 +89,7 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const posts = await Post.find({ user: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       data: posts,
@@ -108,7 +109,7 @@ export const updatePost = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
-    const post = await Post.findById(id);
+    const post = await Post.findOne({ _id: id, user: req.user._id });
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }

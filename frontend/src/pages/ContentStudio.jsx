@@ -6,7 +6,7 @@ import {
   Save, Ban, Calendar, Clock, Image as ImageIcon, Send, ExternalLink,
   ShieldCheck, User, Globe, Zap, Rocket
 } from "lucide-react";
-import axios from "axios";
+import api from "../api/api.js";
 import { toast } from "react-hot-toast";
 import { useAuthStore } from "../store/auth.store";
 
@@ -326,7 +326,7 @@ const ContentStudio = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/posts");
+      const res = await api.get("/posts");
       if (res.data && res.data.success) {
         setPosts(res.data.data);
       }
@@ -400,7 +400,7 @@ const ContentStudio = () => {
       const statusToSet = finalStatus || editData.status;
       const payload = { ...editData, status: statusToSet };
       
-      const res = await axios.put(`http://localhost:8000/api/posts/${selectedPost._id}`, payload);
+      const res = await api.put(`/posts/${selectedPost._id}`, payload);
       
       if (res.data.success) {
         toast.success(finalStatus === "approved" ? "Campaign Live! Synced to Google Sheets." : "Changes Saved Locally.", { id: saveToast });

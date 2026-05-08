@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import passport from "./config/passport.js";
 
 // App Instance
 const app = express();
@@ -25,6 +26,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(passport.initialize());
 
 // Backend Running Test Port
 app.get("/", (req, res) => {

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { FaLinkedin, FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
-import axios from "axios";
+import api from "../api/api.js";
 import { useAuthStore } from "../store/auth.store";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/posts");
+        const res = await api.get("/posts");
         if (res.data && res.data.success) {
           setPosts(res.data.data);
         }
@@ -140,14 +140,14 @@ const Profile = () => {
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-4xl font-black text-white">
-                      {user.profile_initials || user.name.charAt(0)}
+                      {user.profile_initials || user.fullname?.charAt(0) || "U"}
                     </div>
                   )}
                 </div>
 
                 {/* User Info */}
                 <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-                  {user.name}
+                  {user.fullname}
                 </h2>
                 <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full mt-2">
                   {user.role || "Pro Creator"}
