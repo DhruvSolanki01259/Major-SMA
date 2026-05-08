@@ -1,22 +1,22 @@
-import { Toaster } from "react-hot-toast";
+import { Toaster } from"react-hot-toast";
 
-import AppRoutes from "./routes/AppRoutes";
-import { useEffect } from "react";
-import { useAuthStore } from "./store/auth.store";
+import AppRoutes from"./routes/AppRoutes";
+import { useEffect } from"react";
+import { useAuthStore } from"./store/auth.store";
 
 const App = () => {
-  const { checkAuth } = useAuthStore();
+ const { checkAuth } = useAuthStore();
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+ useEffect(() => {
+ checkAuth();
+ }, [checkAuth]);
 
-  return (
-    <>
-      <Toaster position="top-right" reverseOrder={false} />
-      <AppRoutes />
-    </>
-  );
+ return (
+ <>
+ <Toaster position="top-right" reverseOrder={false} />
+ <AppRoutes />
+ </>
+ );
 };
 
 export default App;

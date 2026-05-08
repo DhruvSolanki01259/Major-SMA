@@ -5,7 +5,6 @@ const platformContentSchema = new mongoose.Schema(
     content: {
       text: {
         type: String,
-        required: true,
         default: "",
       },
       hashtags: {
@@ -17,6 +16,10 @@ const platformContentSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    imagePrompt: {
+      type: String,
+      default: "",
+    }
   },
   { _id: false },
 );
@@ -35,32 +38,53 @@ const postSchema = new mongoose.Schema(
       trim: true,
     },
 
+    creative: {
+      imageColors: {
+        type: [String],
+        default: []
+      },
+      imageNotes: {
+        type: String,
+        default: ""
+      },
+      imageURLs: {
+        type: [String],
+        default: []
+      }
+    },
+
+    selectedPlatforms: {
+      type: [String],
+      default: [],
+    },
+
     platforms: {
       twitter: {
         type: platformContentSchema,
-        required: true,
+        required: false,
       },
-
       facebook: {
         type: platformContentSchema,
-        required: true,
+        required: false,
       },
-
       instagram: {
         type: platformContentSchema,
-        required: true,
-        validate: {
-          validator: function (value) {
-            return value.mediaUrl && value.mediaUrl.length > 0;
-          },
-          message: "Instagram requires mediaUrl",
-        },
+        required: false,
       },
-
       linkedin: {
         type: platformContentSchema,
-        required: true,
+        required: false,
       },
+    },
+
+    isScheduled: {
+      type: Boolean,
+      default: false
+    },
+
+    scheduledAt: {
+      date: { type: String },
+      time: { type: String }
     },
 
     status: {

@@ -4,6 +4,7 @@ import { connectDB } from "./database/connectDB.js";
 // Routes
 import contentRoutes from "./routes/content.route.js";
 import authRoutes from "./routes/auth.route.js";
+import postRoutes from "./routes/post.route.js";
 
 // Dependencies Import
 import cookieParser from "cookie-parser";
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 // API's
 app.use("/api/auth", authRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/posts", postRoutes);
 
 // App Run
 app.listen(PORT, () => {

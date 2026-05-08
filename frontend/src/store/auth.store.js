@@ -1,105 +1,105 @@
 // src/store/useAuthStore.js
-import axios from "../api/api.js";
-import { create } from "zustand";
+import axios from"../api/api.js";
+import { create } from"zustand";
 
 export const useAuthStore = create((set) => ({
-  isLoading: false,
-  error: null,
-  user: null,
+ isLoading: false,
+ error: null,
+ user: null,
 
-  /* ---------------- SIGNUP ---------------- */
+ /* ---------------- SIGNUP ---------------- */
 
-  signup: async (data) => {
-    try {
-      set({ isLoading: true, error: null });
+ signup: async (data) => {
+ try {
+ set({ isLoading: true, error: null });
 
-      const res = await axios.post("/auth/signup", data);
+ const res = await axios.post("/auth/signup", data);
 
-      set({
-        user: res.data.user,
-        isLoading: false,
-      });
+ set({
+ user: res.data.user,
+ isLoading: false,
+ });
 
-      return res.data;
-    } catch (err) {
-      const message = err.response?.data?.message || "Signup failed";
+ return res.data;
+ } catch (err) {
+ const message = err.response?.data?.message ||"Signup failed";
 
-      set({
-        error: message,
-        isLoading: false,
-      });
+ set({
+ error: message,
+ isLoading: false,
+ });
 
-      throw new Error(message); // ✅ important
-    }
-  },
+ throw new Error(message); // ✅ important
+ }
+ },
 
-  /* ---------------- LOGIN ---------------- */
+ /* ---------------- LOGIN ---------------- */
 
-  login: async (data) => {
-    try {
-      set({ isLoading: true, error: null });
+ login: async (data) => {
+ try {
+ set({ isLoading: true, error: null });
 
-      const res = await axios.post("/auth/login", data);
+ const res = await axios.post("/auth/login", data);
 
-      set({
-        user: res.data.user,
-        isLoading: false,
-      });
+ set({
+ user: res.data.user,
+ isLoading: false,
+ });
 
-      return res.data; // ✅ success response
-    } catch (err) {
-      const message = err.response?.data?.message || "Login failed";
+ return res.data; // ✅ success response
+ } catch (err) {
+ const message = err.response?.data?.message ||"Login failed";
 
-      set({
-        error: message,
-        isLoading: false,
-      });
+ set({
+ error: message,
+ isLoading: false,
+ });
 
-      throw new Error(message); // 🔥 required fix
-    }
-  },
+ throw new Error(message); // 🔥 required fix
+ }
+ },
 
-  /* ---------------- LOGOUT ---------------- */
+ /* ---------------- LOGOUT ---------------- */
 
-  logout: async () => {
-    try {
-      set({ isLoading: true });
+ logout: async () => {
+ try {
+ set({ isLoading: true });
 
-      await axios.post("/auth/logout");
+ await axios.post("/auth/logout");
 
-      set({
-        user: null,
-        isLoading: false,
-      });
-    } catch (err) {
-      const message = err.response?.data?.message || "Logout failed";
+ set({
+ user: null,
+ isLoading: false,
+ });
+ } catch (err) {
+ const message = err.response?.data?.message ||"Logout failed";
 
-      set({
-        error: message,
-        isLoading: false,
-      });
+ set({
+ error: message,
+ isLoading: false,
+ });
 
-      throw new Error(message);
-    }
-  },
+ throw new Error(message);
+ }
+ },
 
-  /* ---------------- CHECK AUTH ---------------- */
+ /* ---------------- CHECK AUTH ---------------- */
 
-  checkAuth: async () => {
-    try {
-      set({ isLoading: true });
+ checkAuth: async () => {
+ try {
+ set({ isLoading: true });
 
-      const res = await axios.get("/auth/me");
+ const res = await axios.get("/auth/me");
 
-      set({
-        user: res.data.user,
-        isLoading: false,
-      });
-    } catch (err) {
-      set({
-        user: null,
-        isLoading: false,
-      });
-    }
-  },
+ set({
+ user: res.data.user,
+ isLoading: false,
+ });
+ } catch (err) {
+ set({
+ user: null,
+ isLoading: false,
+ });
+ }
+ },
 }));
